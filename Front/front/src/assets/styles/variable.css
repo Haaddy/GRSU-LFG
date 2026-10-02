@@ -1,0 +1,30 @@
+
+@font-face {
+  font-family: "Eudoxus Sans";
+  src: url("../fonts/EudoxusSans-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Eudoxus Sans";
+  src: url("../fonts/EudoxusSans-Bold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Eudoxus Sans";
+  src: url("../fonts/EudoxusSans-Medium.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+:root{
+    --logo-font: "Pirata One", cursive;
+    --logo-size: 3.75rem;
+    --main-font: "Eudoxus Sans", sans-serif;
+}
