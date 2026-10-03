@@ -15,9 +15,36 @@ a{
 p, a,h1 {
     font-family: var(--main-font);
 }
+
+
 .container{
     max-width: 1412px;
     margin: 0 auto;
     padding: 0 15px;
 }
+
+.input{
+    padding: 16px 14px;
+    border: solid 1px;
+    border-color: var(--input-border);
+    outline: none;
+    background-color: var(--input-bg);
+    height: 48px;
+    border-radius: 6px;
+    &::placeholder{
+        color: var(--input-placeholder);
+        font-family: var(--main-font);
+        font-weight: 400;
+        font-size: 15px;
+    }
+    &:focus{
+        border-color: var(--input-focus);
+    }
+
+    
+}
+
+
+
+
 

@@ -27,4 +27,11 @@
     --logo-font: "Pirata One", cursive;
     --logo-size: 3.75rem;
     --main-font: "Eudoxus Sans", sans-serif;
+
+    --input-placeholder: #808080;
+    --input-border: #E5E5E5;
+    --input-bg: #F2F2F2;
+    --input-focus: #4D4D4D;
+
+    --form-btn:#007AFF;
 }

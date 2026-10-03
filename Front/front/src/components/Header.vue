@@ -12,8 +12,8 @@
                 </ul>
             </nav>
             <div class="header__actions">
-                <a href="@" class="header__login">Login</a>
-                <a href="@" class="header__register">Register</a>
+                <router-link to="/login" href="@" class="header__login">Login</router-link>
+                <router-link to ="/register" href="@" class="header__register">Register</router-link>
             </div>
         </div>
       
@@ -85,13 +85,13 @@
     }
 
     .header__login:hover{
-        transform: translateY(5px);
-        transition: 0.5s;
+        scale: 1.1;
+        transition: 0.3s;
     }
 
     .header__register:hover{
-         transform: translateY(5px);
-        transition: 0.5s;
+        scale: 1.1;
+        transition: 0.3s;
     }
 
 
