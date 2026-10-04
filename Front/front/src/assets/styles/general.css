@@ -24,6 +24,7 @@ p, a,h1 {
 }
 
 .input{
+    width: 100%;
     padding: 16px 14px;
     border: solid 1px;
     border-color: var(--input-border);
@@ -42,6 +43,10 @@ p, a,h1 {
     }
 
     
+}
+
+.error{
+    color: var(--error-color);
 }
 
 
