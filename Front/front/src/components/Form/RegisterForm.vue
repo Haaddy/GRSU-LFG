@@ -1,4 +1,4 @@
-<script setup >
+<script setup lang="ts" >
 import eyeIcon from '@/assets/imgs/icons/fi_eye.svg'
 import eyeIconOff from '@/assets/imgs/icons/fi_eye-off.svg'
 

@@ -4,13 +4,13 @@
     <header class="header">
         <div class="header__container container">
             <h1 class="header__logo">GRSU</h1>
-            <nav class="header__navbar">
+            <!-- <nav class="header__navbar">
                 <ul class="header__list">
                 <li class="header__element">Home</li>
                 <li class="header__element" >about</li>
                 <li class="header__element">work</li>
                 </ul>
-            </nav>
+            </nav> -->
             <div class="header__actions">
                 <router-link to="/login" href="@" class="header__login">Login</router-link>
                 <router-link to ="/register" href="@" class="header__register">Register</router-link>

@@ -4,12 +4,14 @@ import RegisterForm from '../Form/RegisterForm.vue';
 
 
 
+
+
 </script>
 
 <template>
 
     <main class="grid">
-        <div class="col1">
+        <div class="col1 zavozik">
 
         </div>
         <div class="col2">
@@ -46,6 +48,9 @@ import RegisterForm from '../Form/RegisterForm.vue';
         
     }
 
+    .zavozik{
+         background-image: url("@/assets/imgs/ronaldo.png");
+    }
 
     .col2{
         padding: 48px 58px;
