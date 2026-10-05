@@ -1,28 +1,23 @@
 <script setup lang="ts">
-import RegisterForm from '../Form/RegisterForm.vue';
-
-
-
-
-
+import LoginForm from '../Form/LoginForm.vue';
 
 </script>
 
 <template>
-
-    <main class="grid">
+     <main class="grid">
         <div class="col1 zavozik">
 
         </div>
         <div class="col2">
-            <h1>Добро пожаловать</h1>
-            <RegisterForm/>
+            <h1>Добро пожаловать login</h1>
+            <LoginForm/>
         </div>
     </main>
 </template>
 
-<style>
-    hr{
+
+<style scoped>
+hr{
         border: none;
         border-top:1px solid #E5E5E5 ;
         border-radius: 8px;

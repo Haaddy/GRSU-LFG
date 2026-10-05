@@ -148,7 +148,7 @@ const validateForm = () => {
             </form>
             <div class="register-form__footer">
                 <p> Есть Аккаунт?</p>
-                <router-link class="register-form__footer-link" to="" >Войти</router-link>
+                <router-link class="register-form__footer-link" to="/login" >Войти</router-link>
             </div>
 </template>
 
