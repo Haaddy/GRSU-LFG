@@ -94,6 +94,66 @@
         transition: 0.3s;
     }
 
+    .header__login,
+    .header__register{
+        white-space: nowrap;
+    }
+
+    @media (max-width: 960px){
+        .header{
+            height: auto;
+        }
+
+        .header__container{
+            height: auto;
+            min-height: 80px;
+            gap: 16px;
+        }
+
+        .header__logo{
+            font-size: 2.75rem;
+        }
+    }
+
+    @media (max-width: 768px){
+        .header__container{
+            min-height: 72px;
+            padding-top: 12px;
+            padding-bottom: 12px;
+        }
+
+        .header__logo{
+            font-size: 2.25rem;
+        }
+
+        .header__actions{
+            gap: 10px;
+        }
+
+        .header__login,
+        .header__register{
+            padding: 12px 18px;
+            font-size: 0.9rem;
+        }
+    }
+
+    @media (max-width: 480px){
+        .header__logo{
+            font-size: 1.75rem;
+        }
+
+        .header__actions{
+            gap: 8px;
+        }
+
+        .header__login,
+        .header__register{
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+    }
+
 
 
 

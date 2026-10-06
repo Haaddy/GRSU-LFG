@@ -78,4 +78,59 @@
         scale: 1.1;
         transition: 0.3s;
      }
+
+     .hero__title h1{
+        font-size: clamp(1.4rem, 3vw, 2rem);
+        line-height: 1.2;
+     }
+
+     .hero__title p{
+        font-size: clamp(0.875rem, 1.5vw, 1rem);
+        line-height: 1.5;
+     }
+
+     @media (max-width: 960px){
+        .hero{
+            height: auto;
+            min-height: 70vh;
+        }
+
+        .hero__container{
+            padding: 72px 40px;
+        }
+
+        .hero__title{
+            gap: 28px;
+        }
+     }
+
+     @media (max-width: 768px){
+        .hero{
+            min-height: 0;
+        }
+
+        .hero__container{
+            padding: 48px 20px;
+        }
+
+        .hero__title{
+            gap: 20px;
+        }
+     }
+
+     @media (max-width: 480px){
+        .hero__container{
+            padding: 36px 16px;
+        }
+
+        .hero__title{
+            gap: 16px;
+        }
+
+        .hero__title a{
+            width: 100%;
+            text-align: center;
+            padding: 14px 20px;
+        }
+     }
 </style>
