@@ -2,12 +2,13 @@
 
 require_once __DIR__ . '/../repositories/UserRepository.php';
 require_once __DIR__ . '/../models/User.php';
+require_once __DIR__ . '/JwtService.php';
 
 class AuthService
 {
     private UserRepository $userRepository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, private JwtService $jwtService)
     {
         $this->userRepository = $userRepository;
     }
@@ -17,7 +18,7 @@ class AuthService
         string $fullName,
         string $email,
         string $password
-    ): User {
+    ) : array {
         $login = trim($login);
         $fullName = trim($fullName);
         $email = trim($email);
@@ -70,9 +71,32 @@ class AuthService
             $email
         );
 
-        $user->id = $this->userRepository->create($user);
+        $user->setId($this->userRepository->create($user));
+        $token = $this->jwtService->generateToken($user);
 
-        return $user;
+        return [
+            'user' => $user,
+            'token' => $token,
+        ];
+    }
+
+    public function login(string $login, string $password): array
+    {
+        $user = $this->userRepository->findByLogin($login);
+        if ($user === null) {
+            throw new InvalidArgumentException('Invalid login or password');
+        }
+
+        if (!password_verify($password, $user->getPasswordHash())) {
+            throw new InvalidArgumentException('Invalid login or password');
+        }
+
+        $token = $this->jwtService->generateToken($user);
+
+        return [
+            'user' => $user,
+            'token' => $token,
+        ];
     }
 
     private function characterLength(string $value): int
@@ -84,4 +108,6 @@ class AuthService
 
         return $length;
     }
+
+
 }

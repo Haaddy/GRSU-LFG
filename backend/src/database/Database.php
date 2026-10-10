@@ -23,6 +23,13 @@ class Database
             $fileConfig = $parsedConfig;
         }
 
+        foreach ($fileConfig as $key => $value) {
+            $environmentValue = $_ENV[$key] ?? getenv($key);
+            if ($environmentValue === false || $environmentValue === null) {
+                $_ENV[$key] = $value;
+            }
+        }
+
         $config = [];
         foreach (['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASSWORD'] as $key) {
             $value = $_ENV[$key] ?? getenv($key);
