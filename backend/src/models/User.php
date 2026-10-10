@@ -7,6 +7,7 @@ class User
         public string $login,
         public string $fullName,
         public string $passwordHash,
-        public string $role
+        public string $role,
+        public string $email = ''
     ) {}
 }

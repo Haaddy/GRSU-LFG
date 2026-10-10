@@ -22,6 +22,8 @@ class Router
 {
     private array $routes = [];
 
+  
+
     public function get(string $path, callable $handler): void
     {
         $this->addRoute('GET', $path, $handler);
@@ -51,6 +53,8 @@ class Router
     }
 
     public function run(): void
+
+
 {
     // Получаем HTTP-метод
     $method = $_SERVER['REQUEST_METHOD'];
@@ -64,6 +68,14 @@ class Router
     // Ищем обработчик для этого метода и пути
     // $handler = $this->routes[$method][$path] ?? null;
 
+    $routeFind = false;
+    $currentHandler = null ;
+
+    $params = [];
+    
+
+
+    // поиск подходящего под динамические параметры маршрута
     foreach($this->routes[$method] as $route => $handler){
         $routePattern = preg_replace(
             '#\{[^}]+\}#',
@@ -73,12 +85,26 @@ class Router
         $regex = '#^' . $routePattern . '$#';
 
         if(preg_match($regex, $path, $matches)){
-            echo 'RoutFound';
-            return;
+            $routeFind = true;
+            $currentHandler = $handler;
+
+            
+
+            preg_match_all(
+                '#\{[^}]+\}#',
+                $route,
+                $paramMatches
+            );
+
+            $paramSeq = $paramMatches[0]; // массив  упорядоченых параметров
+
+            foreach ($paramSeq as $index => $paramName) {
+                $paramName = substr($paramName, 1,-1);
+                $params[$paramName] = $matches[$index + 1];
+            }
+            break;
+                    
         }
-
-
-
 
     }
     
@@ -86,7 +112,7 @@ class Router
     // Говорим клиенту, что ответ будет JSON
     header('Content-Type: application/json');
 
-    if ($handler === null) {
+    if (!$routeFind) {
         http_response_code(404);
 
         echo json_encode([
@@ -97,7 +123,7 @@ class Router
     }
 
     // Вызываем найденный обработчик
-    $result = $handler();
+    $result = $currentHandler($params);
 
     // Возвращаем его результат как JSON
     echo json_encode($result);

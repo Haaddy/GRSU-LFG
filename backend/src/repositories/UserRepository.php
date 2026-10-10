@@ -35,7 +35,8 @@ class UserRepository
             $data['login'],
             $data['full_name'],
             $data['password_hash'],
-            $data['role']
+            $data['role'],
+            (string) ($data['email'] ?? '')
         );
     }
 
@@ -62,7 +63,8 @@ class UserRepository
             $data['login'],
             $data['full_name'],
             $data['password_hash'],
-            $data['role']
+            $data['role'],
+            (string) ($data['email'] ?? '')
         );
     }
 
@@ -70,15 +72,16 @@ class UserRepository
     {
         $query = $this->connection->prepare(
             'INSERT INTO users
-                (login, full_name, password_hash, role)
+                (login, full_name, email, password_hash, role)
              VALUES
-                (:login, :full_name, :password_hash, :role)
+                (:login, :full_name, :email, :password_hash, :role)
              RETURNING id'
         );
 
         $query->execute([
             'login' => $user->login,
             'full_name' => $user->fullName,
+            'email' => $user->email,
             'password_hash' => $user->passwordHash,
             'role' => $user->role
         ]);
