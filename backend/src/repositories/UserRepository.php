@@ -79,11 +79,11 @@ class UserRepository
         );
 
         $query->execute([
-            'login' => $user->login,
-            'full_name' => $user->fullName,
-            'email' => $user->email,
-            'password_hash' => $user->passwordHash,
-            'role' => $user->role
+            'login' => $user->getLogin(),
+            'full_name' => $user->getFullName(),
+            'email' => $user->getEmail(),
+            'password_hash' => $user->getPasswordHash(),
+            'role' => $user->getRole()
         ]);
 
         return (int) $query->fetchColumn();
