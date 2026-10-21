@@ -1,4 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const emit = defineEmits<{
+    startGame: []
+}>()
+</script>
 
 <template>
     <header class="header">
@@ -12,6 +16,9 @@
                 </ul>
             </nav> -->
             <div class="header__actions">
+                <button type="button" class="header__game" @click="emit('startGame')">
+                    Веб-Дозор
+                </button>
                 <router-link to="/login" href="@" class="header__login">Login</router-link>
                 <router-link to ="/register" href="@" class="header__register">Register</router-link>
             </div>
@@ -57,6 +64,18 @@
     .header__actions{
         display: flex;
         gap: 20px;
+        align-items: center;
+    }
+
+    .header__game{
+        color: #172044;
+        background: #b9f3c5;
+        border: 1px solid #68c57a;
+        padding: 15px 22px;
+        border-radius: 18px;
+        font-family: var(--main-font);
+        font-weight: 700;
+        cursor: pointer;
     }
 
     a{
@@ -86,6 +105,11 @@
 
     .header__login:hover{
         scale: 1.1;
+        transition: 0.3s;
+    }
+
+    .header__game:hover{
+        background: #d5ffdc;
         transition: 0.3s;
     }
 
@@ -131,7 +155,8 @@
         }
 
         .header__login,
-        .header__register{
+        .header__register,
+        .header__game{
             padding: 12px 18px;
             font-size: 0.9rem;
         }
@@ -147,7 +172,8 @@
         }
 
         .header__login,
-        .header__register{
+        .header__register,
+        .header__game{
             padding: 10px 12px;
             border-radius: 12px;
             font-size: 0.8rem;
