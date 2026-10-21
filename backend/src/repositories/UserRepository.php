@@ -68,6 +68,34 @@ class UserRepository
         );
     }
 
+    public function findByEmail(string $email): ?User{
+        
+        $query = $this->connection->prepare(
+            'SELECT *
+             FROM users
+             WHERE email = :email'
+        );
+
+        $query->execute([
+            'email' => $email
+        ]);
+
+        $data = $query->fetch(PDO::FETCH_ASSOC);
+
+        if (!$data) {
+            return null;
+        }
+
+        return new User(
+            $data['id'],
+            $data['login'],
+            $data['full_name'],
+            $data['password_hash'],
+            $data['role'],
+            (string) ($data['email'] ?? '')
+        );
+    }
+
     public function create(User $user): int
     {
         $query = $this->connection->prepare(

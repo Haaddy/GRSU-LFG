@@ -18,40 +18,35 @@ class AuthController
             $_SERVER['CONTENT_TYPE'] ?? ''
         )[0]));
 
-        if ($contentType === 'application/json') {
-            $rawData = file_get_contents('php://input');
-            if ($rawData === false) {
-                http_response_code(500);
-                return ['error' => 'Unable to read request body'];
-            }
-
-            try {
-                $decodedData = json_decode(
-                    $rawData,
-                    false,
-                    512,
-                    JSON_THROW_ON_ERROR
-                );
-            } catch (JsonException $e) {
-                http_response_code(400);
-                return ['error' => 'Invalid JSON'];
-            }
-
-            if (!$decodedData instanceof stdClass) {
-                http_response_code(400);
-                return ['error' => 'Expected a JSON object'];
-            }
-
-            $data = get_object_vars($decodedData);
-        } elseif (
-            $contentType === 'application/x-www-form-urlencoded'
-            || $contentType === 'multipart/form-data'
-        ) {
-            $data = $_POST;
-        } else {
+        if ($contentType !== 'application/json') {
             http_response_code(415);
-            return ['error' => 'Unsupported content type'];
+            return ['error' => 'Content-Type must be application/json'];
         }
+
+        $rawData = file_get_contents('php://input');
+        if ($rawData === false) {
+            http_response_code(500);
+            return ['error' => 'Unable to read request body'];
+        }
+
+        try {
+            $decodedData = json_decode(
+                $rawData,
+                false,
+                512,
+                JSON_THROW_ON_ERROR
+            );
+        } catch (JsonException $e) {
+            http_response_code(400);
+            return ['error' => 'Invalid JSON'];
+        }
+
+        if (!$decodedData instanceof stdClass) {
+            http_response_code(400);
+            return ['error' => 'Expected a JSON object'];
+        }
+
+        $data = get_object_vars($decodedData);
 
         foreach (['login', 'full_name', 'email', 'password'] as $field) {
             if (!isset($data[$field]) || !is_string($data[$field])) {
@@ -70,7 +65,7 @@ class AuthController
 
             $user = $result['user'];
             $token = $result['token'];
-        } catch (InvalidArgumentException $e) {
+        } catch (ValidationException $e) {
             http_response_code(400);
             return ['error' => $e->getMessage()];
         }
@@ -94,6 +89,16 @@ class AuthController
 
     public function login(array $params = []): array
     {
+        $contentType = strtolower(trim(explode(
+            ';',
+            $_SERVER['CONTENT_TYPE'] ?? ''
+        )[0]));
+
+        if ($contentType !== 'application/json') {
+            http_response_code(415);
+            return ['error' => 'Content-Type must be application/json'];
+        }
+
         $rawData = file_get_contents('php://input');
         if ($rawData === false) {
             http_response_code(500);
@@ -134,8 +139,8 @@ class AuthController
 
             $user = $result['user'];
             $token = $result['token'];
-        } catch (InvalidArgumentException $e) {
-            http_response_code(400);
+        } catch (ValidationException $e) {
+            http_response_code(401);
             return ['error' => $e->getMessage()];
         }
         return [

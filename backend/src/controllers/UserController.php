@@ -1,9 +1,9 @@
 <?php
 
 class UserController {
-    public function getUser(){
+    public function getUser(array $params): array{
 
-        echo "Router work";
+       
          return
             [
                 'id' => 1,

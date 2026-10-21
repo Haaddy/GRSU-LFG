@@ -4,22 +4,22 @@
 
 **Ответственный:** разработчик Frontend + Backend.
 
-- [ ] Настроить структуру backend: controllers, services, repositories, models, middleware, validators, exceptions.
+- [x] Настроить структуру backend: controllers, services, repositories, models, middleware, validators, exceptions.
 - [ ] Настроить bootstrap-файл приложения и загрузку `.env`.
 - [ ] Настроить подключение к PostgreSQL и Composer autoload.
 - [ ] Завершить Router.
 - [ ] Добавить поддержку GET, POST, PATCH, PUT и DELETE.
 - [ ] Добавить динамические параметры маршрутов, например `/events/{eventId}`.
-- [ ] Добавить middleware для отдельных маршрутов.
+- [x] Добавить middleware для отдельных маршрутов.
 - [ ] Разделить публичные и защищённые маршруты.
 - [ ] Добавить обработку ошибок `404`, `405` и `500`.
 - [ ] Добавить единый JSON-формат успешных ответов и ошибок.
 - [ ] Создать Request/Response helpers для JSON, query-параметров, route-параметров и авторизованного пользователя.
 - [ ] Создать базовые исключения: Validation, Authentication, Authorization, NotFound и Conflict.
-- [ ] Создать базовый механизм валидации входных данных.
-- [ ] Завершить регистрацию и вход пользователя.
-- [ ] Завершить JWT-авторизацию.
-- [ ] Добавить `AuthMiddleware`.
+- [x] Создать базовый механизм валидации входных данных.
+- [x] Завершить регистрацию и вход пользователя.
+- [x] Завершить JWT-авторизацию.
+- [x] Добавить `AuthMiddleware`.
 - [ ] Добавить получение текущего пользователя из JWT.
 - [ ] При необходимости добавить `RoleMiddleware`.
 - [ ] Проверить срок действия и payload JWT.

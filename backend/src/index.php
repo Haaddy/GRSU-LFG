@@ -22,7 +22,7 @@ if (!is_string($jwtSecret) || $jwtSecret === '') {
 $jwtService = new JwtService($jwtSecret, 3600);
 $authService = new AuthService($userRepository, $jwtService);
 $authController = new AuthController($authService);
-$authMiddleware = new AuthMiddleware($jwtSecret);
+$authMiddleware = new AuthMiddleware($jwtSecret, $userRepository);
 
 $router->get(
     '/api/user',

@@ -1,9 +1,16 @@
 <?php
+
+require_once __DIR__ . '/../repositories/UserRepository.php';
+
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-class AuthMiddleware{
- public function __construct(private string $secret) {}
+class AuthMiddleware
+{
+ public function __construct(
+     private string $secret,
+     private UserRepository $userRepository
+ ) {}
 
  public function handle():array{
      $authorization = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
@@ -27,20 +34,36 @@ class AuthMiddleware{
         ];
     }
 
-    if (
-        !isset($decoded->sub)
-        || !is_numeric($decoded->sub)
-        || (int) $decoded->sub < 1
-    ) {
+    if (!isset($decoded->sub) || filter_var($decoded->sub, FILTER_VALIDATE_INT) === false) {
         return [
             'ok' => false,
             'status' => 401,
             'error' => 'Invalid token payload'
         ];
     }
+
+    $userId = (int) $decoded->sub;
+    if ($userId < 1) {
+        return [
+            'ok' => false,
+            'status' => 401,
+            'error' => 'Invalid token payload'
+        ];
+    }
+
+    $user = $this->userRepository->findById($userId);
+    if ($user === null) {
+        return [
+            'ok' => false,
+            'status' => 401,
+            'error' => 'User from token was not found'
+        ];
+    }
+
      return[
             'ok' => true,
-            'user_id' => $decoded->sub
+            'user_id' => $userId,
+            'user' => $user
         ];
  }
 }
