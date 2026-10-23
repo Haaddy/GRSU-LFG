@@ -24,10 +24,7 @@ $authService = new AuthService($userRepository, $jwtService);
 $authController = new AuthController($authService);
 $authMiddleware = new AuthMiddleware($jwtSecret, $userRepository);
 
-$router->get(
-    '/api/user',
-    [$userController, 'getUser']
-);
+
 
 $router->post(
     '/api/auth/register',
@@ -37,6 +34,11 @@ $router->post(
 $router->post(
     '/api/auth/login',
     [$authController, 'login']
+);
+
+$router->post(
+    '/api/auth/logout',
+    [$authController, 'logout']
 );
 
 // * test route

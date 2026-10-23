@@ -16,73 +16,82 @@ class Router
     public function get(
         string $path,
         callable $handler,
-        array $middleware = []
+        array $middleware = [],
+        array $constraints = []
     ): void
     {
-        $this->addRoute('GET', $path, $handler, $middleware);
+        $this->addRoute('GET', $path, $handler, $middleware, $constraints);
     }
 
     public function post(
         string $path,
         callable $handler,
-        array $middleware = []
+        array $middleware = [],
+        array $constraints = []
     ): void
     {
-        $this->addRoute('POST', $path, $handler, $middleware);
+        $this->addRoute('POST', $path, $handler, $middleware, $constraints);
     }
 
     public function put(
         string $path,
         callable $handler,
-        array $middleware = []
+        array $middleware = [],
+        array $constraints = []
     ): void
     {
-        $this->addRoute('PUT', $path, $handler, $middleware);
+        $this->addRoute('PUT', $path, $handler, $middleware, $constraints);
     }
 
     public function patch(
         string $path,
         callable $handler,
-        array $middleware = []
+        array $middleware = [],
+        array $constraints = []
     ): void
     {
-        $this->addRoute('PATCH', $path, $handler, $middleware);
+        $this->addRoute('PATCH', $path, $handler, $middleware, $constraints);
     }
 
     public function delete(
         string $path,
         callable $handler,
-        array $middleware = []
+        array $middleware = [],
+        array $constraints = []
     ): void
     {
-        $this->addRoute('DELETE', $path, $handler, $middleware);
+        $this->addRoute('DELETE', $path, $handler, $middleware, $constraints);
     }
 
-// * рекомендуемы вариант
-//     $params = [
-//     'route' => [
-//         'eventId' => '15'
-//     ],
-//     'query' => [
-//         'status' => 'upcoming',
-//         'page' => '2',
-//         'limit' => '10'
-//     ],
-//     'auth' => [
-//         'user_id' => 1
-//     ]
-// ];
+
 
     private function addRoute(
         string $method,
         string $path,
         callable $handler,
-        array $middleware = []
+        array $middleware = [],
+        array $constraints = []
     ): void {
         $this->routes[$method][$path] = [
             'handler' => $handler,
-            'middleware' => $middleware
+            'middleware' => $middleware,
+            'constraints' => $constraints,
         ];
+    }
+
+    private function getParameterPattern(
+        string $parameterName,
+        array $constraints
+    ): string {
+        $constraint = $constraints[$parameterName] ?? null;
+
+        return match ($constraint) {
+            null, 'string' => '[^/]+',
+            'int' => '-?[0-9]+',
+            default => throw new InvalidArgumentException(
+                "Unsupported route parameter type: {$constraint}"
+            ),
+        };
     }
 
     public function run(): void
@@ -93,11 +102,13 @@ class Router
     $method = $_SERVER['REQUEST_METHOD'];
 
     // Получаем путь и query-параметры из URL
-    $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
-    $path = parse_url($requestUri, PHP_URL_PATH) ?: '/';
-    $queryString = parse_url($requestUri, PHP_URL_QUERY) ?? '';
-    $queryParams = [];
-    parse_str($queryString, $queryParams);
+    $requestUri = $_SERVER['REQUEST_URI'] ?? '/'; // url
+    $path = parse_url($requestUri, PHP_URL_PATH) ?: '/'; // путь
+
+    $queryString = parse_url($requestUri, PHP_URL_QUERY) ?? '';// query-параметры
+    $queryParams = []; 
+
+    parse_str($queryString, $queryParams); // преобразуем query-параметры в массив
 
     $path = rtrim($path, '/');
 
@@ -105,12 +116,12 @@ class Router
         $path = '/';
     }
 
-    // Ищем обработчик для этого метода и пути
-    // $handler = $this->routes[$method][$path] ?? null;
-
     $routeFind = false;
     $currentHandler = null ;
     $currentMiddleware = [];
+
+
+   
 
     $params = [
         'route' => [],
@@ -119,24 +130,44 @@ class Router
     ];
     
 
-    $methodRoutes = $this->routes[$method] ?? [];
+    $methodRoutes = $this->routes[$method] ?? []; // получаем маршруты текущего метода или [] 
 
 
     // поиск подходящего под динамические параметры маршрута
     foreach($methodRoutes as $route => $routeDefinition){ 
-        $routePattern = preg_replace(
-            '#\{[^}]+\}#',
-            '([^/]+)',
+        // Берём ограничения параметров текущего маршрута.
+        $constraints = $routeDefinition['constraints'] ?? [];
+
+        // Превращаем {parameter} в соответствующий шаблон регулярного выражения.
+        $routePattern = preg_replace_callback(
+            '#\{([^}]+)\}#',
+            function (array $matches) use ($constraints): string {
+                $parameterName = $matches[1];
+                $parameterPattern = $this->getParameterPattern(
+                    $parameterName,
+                    $constraints
+                );
+
+                return '(' . $parameterPattern . ')';
+            },
             $route
         );
+
+        if ($routePattern === null) {
+            throw new LogicException(
+                "Unable to build route pattern for: {$route}"
+            );
+        }
+
         $regex = '#^' . $routePattern . '$#';
 
+        // Проверяем, соответствует ли URL текущему маршруту.
         if(preg_match($regex, $path, $matches)){
             $routeFind = true;
             $currentHandler = $routeDefinition['handler'];
             $currentMiddleware = $routeDefinition['middleware'];
             
-
+            // Получаем имена динамических параметров в порядке их появления.
             preg_match_all(
                 '#\{[^}]+\}#',
                 $route,
@@ -146,9 +177,30 @@ class Router
             $paramSeq = $paramMatches[0]; // массив  упорядоченых параметров
 
             foreach ($paramSeq as $index => $paramName) {
+                // Связываем имя параметра с захваченным значением из URL.
                 $paramName = substr($paramName, 1,-1);
-                $params['route'][$paramName] = urldecode($matches[$index + 1]);
+
+                $value = urldecode($matches[$index + 1]);
+                $constraint = $constraints[$paramName] ?? null;
+
+                if ($constraint === 'int') {
+                    $validatedValue = filter_var(
+                        $value,
+                        FILTER_VALIDATE_INT
+                    );
+
+                    if ($validatedValue === false) {
+                        throw new UnexpectedValueException(
+                            "Invalid integer route parameter: {$paramName}"
+                        );
+                    }
+
+                    $value = $validatedValue;
+                }
+
+                $params['route'][$paramName] = $value;
             }
+            // Подходящий маршрут найден — остальные проверять не нужно.
             break;
                     
         }

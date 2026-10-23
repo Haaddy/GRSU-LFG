@@ -4,6 +4,9 @@ require_once __DIR__ . '/../services/AuthService.php';
 
 class AuthController
 {
+    private const AUTH_COOKIE_NAME = 'access_token';
+    private const AUTH_COOKIE_TTL = 3600;
+
     private AuthService $authService;
 
     public function __construct(AuthService $authService)
@@ -64,7 +67,7 @@ class AuthController
             );
 
             $user = $result['user'];
-            $token = $result['token'];
+            $this->setAuthCookie($result['token']);
         } catch (ValidationException $e) {
             http_response_code(400);
             return ['error' => $e->getMessage()];
@@ -75,9 +78,6 @@ class AuthController
 
         return [
             'message' => 'User registered successfully',
-            'token' => $result['token'],
-            'token_type' => 'Bearer',
-            'expires_in' => 3600,
             'user' => [
                 'id' => $user->getId(),
                 'login' => $user->getLogin(),
@@ -138,16 +138,13 @@ class AuthController
             );
 
             $user = $result['user'];
-            $token = $result['token'];
+            $this->setAuthCookie($result['token']);
         } catch (ValidationException $e) {
             http_response_code(401);
             return ['error' => $e->getMessage()];
         }
         return [
             'message' => 'Login successful',
-            'token' => $token,
-            'token_type' => 'Bearer',
-            'expires_in' => 3600,
             'user' => [
                 'id' => $user->getId(),
                 'login' => $user->getLogin(),
@@ -155,5 +152,55 @@ class AuthController
                 'email' => $user->getEmail()
             ]
         ];
+    }
+
+    public function logout(array $params = []): array
+    {
+        $isHttps = !empty($_SERVER['HTTPS'])
+            && $_SERVER['HTTPS'] !== 'off';
+
+        // Истёкшая cookie заставляет браузер удалить сохранённый JWT.
+        $cookieCleared = setcookie(
+            self::AUTH_COOKIE_NAME,
+            '',
+            [
+                'expires' => time() - 3600,
+                'path' => '/',
+                'secure' => $isHttps,
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ]
+        );
+
+        if (!$cookieCleared) {
+            throw new RuntimeException('Unable to clear authentication cookie');
+        }
+
+        return [
+            'message' => 'Logout successful'
+        ];
+    }
+
+    private function setAuthCookie(string $token): void
+    {
+        // HttpOnly не позволяет JavaScript прочитать JWT из cookie.
+        $isHttps = !empty($_SERVER['HTTPS'])
+            && $_SERVER['HTTPS'] !== 'off';
+
+        $cookieSet = setcookie(
+            self::AUTH_COOKIE_NAME,
+            $token,
+            [
+                'expires' => time() + self::AUTH_COOKIE_TTL,
+                'path' => '/',
+                'secure' => $isHttps,
+                'httponly' => true,
+                'samesite' => 'Lax',
+            ]
+        );
+
+        if (!$cookieSet) {
+            throw new RuntimeException('Unable to set authentication cookie');
+        }
     }
 }
