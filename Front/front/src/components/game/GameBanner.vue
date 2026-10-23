@@ -13,6 +13,15 @@ const emit = defineEmits<{
 
 <template>
   <article class="threat-card threat-card--banner" data-threat="banner">
+    <button
+      v-if="fakeClose"
+      type="button"
+      class="threat-card__real-close"
+      data-threat-action="banner-close"
+      aria-label="Закрыть баннер"
+    >
+      ×
+    </button>
     <div class="threat-card__topline">
       <span class="threat-card__badge">POP-UP</span>
       <span class="threat-card__signal">UNTRUSTED</span>
@@ -39,6 +48,7 @@ const emit = defineEmits<{
 
 <style scoped>
 .threat-card {
+  position: relative;
   width: min(100%, 320px);
   padding: 20px;
   color: #f5f7ff;
@@ -110,6 +120,20 @@ button {
   background: #d64761;
   border-radius: 50%;
   font-size: 1.5rem;
+  line-height: 1;
+}
+
+.threat-card__real-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  color: #aab4bb;
+  background: transparent;
+  border: 0;
+  font-size: 1.2rem;
   line-height: 1;
 }
 

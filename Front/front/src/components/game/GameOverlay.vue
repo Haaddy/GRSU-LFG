@@ -13,34 +13,36 @@ const props = withDefaults(defineProps<{
   autoStart: false,
 })
 
-const isOpen = ref(true)
-const isStarted = ref(props.autoStart)
-const showBanner = ref(true)
-const showTrojan = ref(true)
-const showToast = ref(true)
-const showVideo = ref(true)
-const showCaptcha = ref(false)
-const videoProgress = ref(0)
-const adSpeed = ref(1)
-const isGameOver = ref(false)
-const isBannerCloseFake = ref(Math.random() < 0.5)
-const bannerPosition = ref(0)
-const trojanPosition = ref(1)
-const caught = ref(0)
-const statusMessage = ref('Система готова к запуску.')
-const isQuarantineActive = ref(false)
-const isSettingsOpen = ref(false)
-const settingsName = ref('')
-const settingsTheme = ref<GameTheme>('night')
+const isOpen = ref(true) //! Видимость игрового окна.
+const isStarted = ref(props.autoStart) //! Запущена ли игра.
+const showBanner = ref(true) //! Показывать ли баннер.
+const showTrojan = ref(true) //! Показывать ли троян.
+const showToast = ref(true) //! Показывать ли уведомление.
+const showVideo = ref(true) //! Показывать ли видеорекламу.
+const showCaptcha = ref(false) //! Открыта ли CAPTCHA.
+const videoProgress = ref(0) //! Прогресс видеорекламы.
+const adSpeed = ref(1) //! Скорость видеорекламы.
+const isGameOver = ref(false) //! Завершена ли игра.
+const isBannerCloseFake = ref(Math.random() < 0.5) //! Фальшивая кнопка баннера.
+const bannerPosition = ref(0) //! Позиция баннера.
+const trojanPosition = ref(1) //! Позиция трояна.
+const caught = ref(0) //! Количество пойманных угроз.
+const statusMessage = ref('Система готова к запуску.') //! Сообщение о состоянии игры.
+const isQuarantineActive = ref(false) //! Активна ли зона карантина.
+const isSettingsOpen = ref(false) //! Открыты ли настройки.
+const settingsName = ref('') //! Имя игрока в настройках.
+const settingsTheme = ref<GameTheme>('night') //! Тема интерфейса.
 const storage = useGameStorage()
 const { health, traffic, playerName, theme, isVip } = storage
 
-const healthLabel = computed(() => `${health.value}%`)
-let captchaTimer: ReturnType<typeof setInterval> | undefined
-let videoTimer: ReturnType<typeof setInterval> | undefined
-let waveTimer: ReturnType<typeof setTimeout> | undefined
-let captchaTrafficTimer: ReturnType<typeof setInterval> | undefined
+const healthLabel = computed(() => `${health.value}%`) //! Формат здоровья для интерфейса.
 
+let captchaTimer: ReturnType<typeof setInterval> | undefined //! Таймер CAPTCHA.
+let videoTimer: ReturnType<typeof setInterval> | undefined //! Таймер видеорекламы.
+let waveTimer: ReturnType<typeof setTimeout> | undefined //! Таймер новой волны.
+let captchaTrafficTimer: ReturnType<typeof setInterval> | undefined //! Таймер роста трафика.
+
+//! Загружает настройки и запускает фоновые игровые таймеры.
 onMounted(() => {
   storage.initialize()
   settingsName.value = playerName.value
@@ -65,6 +67,7 @@ onMounted(() => {
   }, 1000)
 })
 
+//! Останавливает таймеры при удалении компонента.
 onBeforeUnmount(() => {
   if (captchaTimer) clearInterval(captchaTimer)
   if (videoTimer) clearInterval(videoTimer)
@@ -72,6 +75,7 @@ onBeforeUnmount(() => {
   if (captchaTrafficTimer) clearInterval(captchaTrafficTimer)
 })
 
+//! Запускает новую игровую сессию.
 function startGame() {
   isStarted.value = true
   isGameOver.value = false
@@ -81,21 +85,30 @@ function startGame() {
   startThreatLoop()
 }
 
+//! Закрывает баннер и сохраняет нейтрализованную угрозу.
 function closeBanner() {
   showBanner.value = false
   caught.value += 1
+  //! Сохраняет закрытый баннер и время нейтрализации.
   void storage.recordThreat({ type: 'banner', caughtAt: new Date().toISOString() }).catch(() => {
+    //! Показывает сообщение, если запись не сохранилась.
     statusMessage.value = 'Баннер закрыт, но запись в базу угроз не удалась.'
   })
   statusMessage.value = 'Баннер нейтрализован. Сигнатура добавлена в базу.'
 }
 
+//! Наносит урон системе и завершает игру при нулевом здоровье.
 function damage(amount = 10, message = 'Промах! Система получила повреждение.') {
+  if (isVip.value) {
+    statusMessage.value = 'VIP-защита заблокировала урон.'
+    return
+  }
   storage.setStats(Math.max(0, health.value - amount), traffic.value + amount)
   statusMessage.value = message
   if (health.value <= 0) finishGame()
 }
 
+//! Перемещает файл-троян в карантин.
 function handleTrojanQuarantined() {
   showTrojan.value = false
   isQuarantineActive.value = false
@@ -106,26 +119,31 @@ function handleTrojanQuarantined() {
   statusMessage.value = 'Файл-троян перемещён в карантин.'
 }
 
+//! Обрабатывает заражение после истечения времени.
 function handleTrojanExpired() {
   showTrojan.value = false
   damage(20, 'Файл-троян успел заразить систему.')
 }
 
+//! Разрешает сброс файла и подсвечивает карантин.
 function allowDrop(event: DragEvent) {
-  event.preventDefault()
-  isQuarantineActive.value = true
+  event.preventDefault() //! Разрешает сброс элемента.
+  isQuarantineActive.value = true //! Подсвечивает карантин.
 }
 
+//! Убирает подсветку при уходе файла.
 function leaveQuarantine() {
-  isQuarantineActive.value = false
+  isQuarantineActive.value = false //! Снимает подсветку карантина.
 }
 
+//! Проверяет данные и принимает троян в карантин.
 function dropToQuarantine(event: DragEvent) {
-  event.preventDefault()
-  if (event.dataTransfer?.getData('text/plain') !== 'trojan-file') return
-  handleTrojanQuarantined()
+  event.preventDefault() //! Отменяет стандартное поведение браузера.
+  if (event.dataTransfer?.getData('text/plain') !== 'trojan-file') return //! Проверяет тип файла.
+  handleTrojanQuarantined() //! Перемещает троян в карантин.
 }
 
+//! Показывает новый набор угроз.
 function spawnThreats() {
   if (isGameOver.value) return
   showBanner.value = true
@@ -139,11 +157,13 @@ function spawnThreats() {
   statusMessage.value = 'Новые угрозы появились в зоне наблюдения.'
 }
 
+//! Перезапускает цикл появления угроз.
 function startThreatLoop() {
   if (waveTimer) clearTimeout(waveTimer)
   scheduleThreatWave()
 }
 
+//! Планирует следующую волну угроз со случайной задержкой.
 function scheduleThreatWave() {
   const delay = 6_000 + Math.floor(Math.random() * 9_000)
   waveTimer = setTimeout(() => {
@@ -153,6 +173,7 @@ function scheduleThreatWave() {
   }, delay)
 }
 
+//! Завершает игру и останавливает новые волны.
 function finishGame() {
   isGameOver.value = true
   showCaptcha.value = false
@@ -160,6 +181,7 @@ function finishGame() {
   if (waveTimer) clearTimeout(waveTimer)
 }
 
+//! Сбрасывает статистику и начинает игру заново.
 function restartGame() {
   storage.setStats(100, 0)
   caught.value = 0
@@ -177,37 +199,40 @@ function restartGame() {
   startThreatLoop()
 }
 
+//! Определяет действие пользователя по клику на угрозе.
 function handleThreatClick(event: MouseEvent) {
-  if (showCaptcha.value || isGameOver.value) return
-  const target = event.target
-  if (!(target instanceof HTMLElement)) return
-  const action = target.closest<HTMLElement>('[data-threat-action]')?.dataset.threatAction
-  const threat = target.closest<HTMLElement>('[data-threat]')?.dataset.threat
+  if (showCaptcha.value || isGameOver.value) return //! Блокирует клики во время CAPTCHA или после проигрыша.
+  const target = event.target //! Получает элемент, по которому кликнули.
+  if (!(target instanceof HTMLElement)) return //! Проверяет, что это HTML-элемент.
+  const action = target.closest<HTMLElement>('[data-threat-action]')?.dataset.threatAction //! Читает действие кнопки.
+  const threat = target.closest<HTMLElement>('[data-threat]')?.dataset.threat //! Читает тип угрозы.
 
-  if (action === 'banner-close') closeBanner()
-  else if (action === 'banner-damage') damage()
+  if (action === 'banner-close') closeBanner() //! Закрывает настоящий баннер.
+  else if (action === 'banner-damage') damage() //! Наносит урон от фальшивой кнопки.
   else if (action === 'toast-block') {
-    showToast.value = false
-    caught.value += 1
-    statusMessage.value = 'Browser notification заблокировано.'
+    showToast.value = false //! Скрывает уведомление.
+    caught.value += 1 //! Увеличивает число пойманных угроз.
+    statusMessage.value = 'Browser notification заблокировано.' //! Показывает результат блокировки.
   } else if (action === 'toast-allow') {
-    showToast.value = false
-    adSpeed.value = 2
-    statusMessage.value = 'Разрешение получено: скорость рекламы удвоена.'
+    showToast.value = false //! Скрывает уведомление.
+    adSpeed.value = 2 //! Ускоряет видеорекламу.
+    statusMessage.value = 'Разрешение получено: скорость рекламы удвоена.' //! Показывает результат разрешения.
   } else if (action === 'video-close') {
-    showVideo.value = false
-    caught.value += 1
-    statusMessage.value = 'Видеореклама остановлена.'
+    showVideo.value = false //! Останавливает видеорекламу.
+    caught.value += 1 //! Увеличивает число пойманных угроз.
+    statusMessage.value = 'Видеореклама остановлена.' //! Показывает результат действия.
   } else if (threat === 'banner' || threat === 'trojan') {
-    damage(threat === 'trojan' ? 15 : 10)
+    damage(threat === 'trojan' ? 15 : 10) //! Наносит урон при клике по угрозе.
   }
 }
 
+//! Закрывает CAPTCHA и возвращает возможность взаимодействия.
 function verifyCaptcha() {
   showCaptcha.value = false
   statusMessage.value = 'CAPTCHA пройдена. Угрозы снова доступны для кликов.'
 }
 
+//! Сохраняет имя и выбранную тему интерфейса.
 function saveSettings() {
   storage.saveSettings(settingsName.value, settingsTheme.value)
   isSettingsOpen.value = false

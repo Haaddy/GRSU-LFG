@@ -6,18 +6,20 @@ const props = defineProps<{
   duration?: number
 }>()
 
+//! События для действий с файлом.
 const emit = defineEmits<{
   quarantined: []
   damage: []
   expired: []
 }>()
 
-const remaining = ref(props.duration ?? 12)
-const isDragging = ref(false)
-let timer: ReturnType<typeof setInterval> | undefined
+const remaining = ref(props.duration ?? 12) //! Оставшееся время до заражения.
+const isDragging = ref(false) //! Перетаскивается ли файл.
+let timer: ReturnType<typeof setInterval> | undefined //! Таймер обратного отсчёта.
 
-const progress = computed(() => `${(remaining.value / (props.duration ?? 12)) * 100}%`)
+const progress = computed(() => `${(remaining.value / (props.duration ?? 12)) * 100}%`) //! Прогресс таймера.
 
+//! Запускает обратный отсчёт файла.
 onMounted(() => {
   timer = setInterval(() => {
     remaining.value -= 1
@@ -28,18 +30,21 @@ onMounted(() => {
   }, 1000)
 })
 
+//! Останавливает таймер при удалении компонента.
 onBeforeUnmount(() => {
   if (timer) clearInterval(timer)
 })
 
+//! Запоминает файл и начинает его перетаскивание.
 function handleDragStart(event: DragEvent) {
-  isDragging.value = true
-  event.dataTransfer?.setData('text/plain', 'trojan-file')
-  if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move'
+  isDragging.value = true //! Показывает состояние перетаскивания.
+  event.dataTransfer?.setData('text/plain', 'trojan-file') //! Передаёт идентификатор файла.
+  if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move' //! Разрешает перемещение.
 }
 
+//! Сбрасывает состояние после перетаскивания.
 function handleDragEnd() {
-  isDragging.value = false
+  isDragging.value = false //! Убирает состояние перетаскивания.
 }
 </script>
 
