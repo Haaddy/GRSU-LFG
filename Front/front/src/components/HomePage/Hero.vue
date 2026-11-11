@@ -31,7 +31,7 @@
     }
     p, h1 {
         color: #fff;
-        font-family: var(--main-font);
+        font-family: var(--font-main);
 
         font-weight: 700;
         
@@ -40,7 +40,7 @@
    
 
      .hero{
-        background-color: #121B68;
+        background-color: var(--color-primary);
         height: 74vh;
 
         
@@ -70,8 +70,8 @@
 
      .hero__title a{
         background-color: #fff;
-        border-radius: 18px;
-        color: #121B68;
+        border-radius: var(--radius-lg);
+        color: var(--color-primary);
         padding: 15px 29px;
      }
      .hero__title a:hover{

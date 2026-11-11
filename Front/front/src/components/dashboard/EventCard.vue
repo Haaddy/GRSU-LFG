@@ -67,8 +67,8 @@ defineProps<{
         padding: 24px;
 
         background-color: #fff;
-        border: solid 1px var(--input-border);
-        border-radius: 18px;
+        border: solid 1px var(--color-border);
+        border-radius: var(--radius-lg);
     }
 
     .event-card:hover {
@@ -85,7 +85,7 @@ defineProps<{
     }
 
     .event-card__name {
-        font-family: var(--main-font);
+        font-family: var(--font-main);
         font-weight: 700;
         font-size: 1.15rem;
         color: #000;
@@ -96,9 +96,9 @@ defineProps<{
         flex-shrink: 0;
 
         padding: 6px 12px;
-        border-radius: 999px;
+        border-radius: var(--radius-pill);
 
-        font-family: var(--main-font);
+        font-family: var(--font-main);
         font-weight: 500;
         font-size: 0.72rem;
         text-transform: uppercase;
@@ -116,16 +116,16 @@ defineProps<{
     }
 
     .event-card__status--completed {
-        background-color: var(--input-bg);
-        color: var(--input-focus);
+        background-color: var(--color-input-background);
+        color: var(--color-input-focus);
     }
 
     .event-card__description {
-        font-family: var(--main-font);
+        font-family: var(--font-main);
         font-weight: 400;
         font-size: 0.92rem;
         line-height: 1.5;
-        color: var(--input-placeholder);
+        color: var(--color-placeholder);
 
         display: -webkit-box;
         -webkit-line-clamp: 2;
@@ -146,7 +146,7 @@ defineProps<{
         align-items: center;
         gap: 10px;
 
-        font-family: var(--main-font);
+        font-family: var(--font-main);
         font-weight: 500;
         font-size: 0.88rem;
         color: #000;
@@ -155,30 +155,32 @@ defineProps<{
     .event-card__meta-icon {
         width: 16px;
         height: 16px;
-        color: #121B68;
+        color: var(--color-primary);
         flex-shrink: 0;
     }
 
     .event-card__footer {
         display: flex;
         padding-top: 14px;
-        border-top: dashed 1px var(--input-border);
+        border-top: dashed 1px var(--color-border);
     }
 
     .event-card__team {
         padding: 6px 12px;
-        border-radius: 6px;
+        border-radius: var(--radius-sm);
 
-        background-color: var(--input-bg);
-        color: var(--input-focus);
+        background-color: var(--color-input-background);
+        color: var(--color-input-focus);
 
-        font-family: var(--main-font);
+        font-family: var(--font-main);
         font-weight: 500;
         font-size: 0.75rem;
     }
 
     .event-card__team--required {
         background-color: rgba(18, 27, 104, 0.08);
-        color: #121B68;
+        color: var(--color-primary);
     }
 </style>
+
+

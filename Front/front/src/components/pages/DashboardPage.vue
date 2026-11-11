@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DashboardHeader from '../dashboard/DashboardHeader.vue';
+import Header from '../Header.vue';
 import SearchInput from '../ui/SearchInput.vue';
 import SelectField from '../ui/SelectField.vue';
 import FilterChips from '../ui/FilterChips.vue';
@@ -73,7 +73,7 @@ const events: EventItem[] = [
 <template>
     <div class="dashboard">
         <!-- !  ================= HEADER ================= -->
-        <DashboardHeader/>
+        <Header/>
 
         <!-- ================= EXPLORE EVENTS ================= -->
          <!-- TODO in componetn -->
@@ -118,16 +118,16 @@ const events: EventItem[] = [
     }
 
     .explore__title {
-        font-family: var(--main-font);
+        font-family: var(--font-main);
         font-weight: 700;
         font-size: 2rem;
         color: #000;
     }
 
     .explore__subtitle {
-        font-family: var(--main-font);
+        font-family: var(--font-main);
         font-weight: 400;
-        color: var(--input-placeholder);
+        color: var(--color-placeholder);
     }
 
     /* toolbar (layout only, контент — в SearchInput / SelectField) */
@@ -163,3 +163,5 @@ const events: EventItem[] = [
         }
     }
 </style>
+
+

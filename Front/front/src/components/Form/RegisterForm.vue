@@ -170,14 +170,14 @@ const validateForm = () => {
         gap: 8px;
     }
     .register-form label {
-        font-family: var(--main-font);
+        font-family: var(--font-main);
         font-weight: 500;
         font-size: 13px;
         
     }
 
     .register-form__btn{
-        background-color: var(--form-btn);
+        background-color: var(--color-action);
         border: none;
 
         width: 100%;
@@ -185,7 +185,7 @@ const validateForm = () => {
         border-radius: 8px;
         color: #fff;
 
-        font-family: var(--main-font);
+        font-family: var(--font-main);
         font-weight: 500;
 
         
@@ -233,15 +233,16 @@ const validateForm = () => {
     }
 
     .register-form__footer p{
-        font-family: var(--logo-font);
+        font-family: var(--font-logo);
         font-weight: 500;
         font-size: 12px;
     }
     .register-form__footer-link{
         color: blue;
-        font-family: var(--main-font);
+        font-family: var(--font-main);
         font-weight: 600;
         font-size: 12px;
     }
 
     </style>
+

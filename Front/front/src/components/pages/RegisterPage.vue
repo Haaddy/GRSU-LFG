@@ -24,7 +24,7 @@ import RegisterForm from '../Form/RegisterForm.vue';
 <style>
     hr{
         border: none;
-        border-top:1px solid #E5E5E5 ;
+        border-top:1px solid var(--color-border) ;
         border-radius: 8px;
         width: 100%;
         max-width: 360px;
@@ -57,7 +57,7 @@ import RegisterForm from '../Form/RegisterForm.vue';
     }
 
     .col2 h1{
-        font-family: var(--main-font);
+        font-family: var(--font-main);
         font-weight: 500;
         
     }
@@ -97,3 +97,4 @@ import RegisterForm from '../Form/RegisterForm.vue';
          background-image: url("@/assets/imgs/ronaldo.png");
     }
 </style>
+

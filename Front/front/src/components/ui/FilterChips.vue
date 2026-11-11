@@ -1,4 +1,4 @@
-<script setup lang="ts"></script>
+﻿<script setup lang="ts"></script>
 
 <template>
     <div class="filter-chips">
@@ -19,11 +19,11 @@
 
     .filter-chips__chip {
         padding: 10px 20px;
-        border: solid 1px var(--input-border);
-        border-radius: 18px;
+        border: solid 1px var(--color-border);
+        border-radius: var(--radius-lg);
         background: none;
 
-        font-family: var(--main-font);
+        font-family: var(--font-main);
         font-weight: 500;
         font-size: 14px;
         color: #000;
@@ -55,3 +55,5 @@
         }
     }
 </style>
+
+

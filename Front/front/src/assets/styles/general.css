@@ -1,4 +1,4 @@
-
+﻿
 
 
 *, *::before, *::after {
@@ -13,7 +13,7 @@ a{
 }
 
 p, a,h1 {
-    font-family: var(--main-font);
+    font-family: var(--font-main);
 }
 
 
@@ -27,26 +27,26 @@ p, a,h1 {
     width: 100%;
     padding: 16px 14px;
     border: solid 1px;
-    border-color: var(--input-border);
+    border-color: var(--color-border);
     outline: none;
-    background-color: var(--input-bg);
-    height: 48px;
-    border-radius: 6px;
+    background-color: var(--color-input-background);
+    height: var(--input-height);
+    border-radius: var(--radius-sm);
     &::placeholder{
-        color: var(--input-placeholder);
-        font-family: var(--main-font);
+        color: var(--color-placeholder);
+        font-family: var(--font-main);
         font-weight: 400;
         font-size: 15px;
     }
     &:focus{
-        border-color: var(--input-focus);
+        border-color: var(--color-input-focus);
     }
 
     
 }
 
 .error{
-    color: var(--error-color);
+    color: var(--color-error);
 }
 
 

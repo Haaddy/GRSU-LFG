@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 
 import EventDetails from './components/pages/EventDetails.vue';
 import HomePage from './components/pages/HomePage.vue';
@@ -10,8 +10,8 @@ import HomePage from './components/pages/HomePage.vue';
 <template>
     
 
-    <!-- <RouterView/>    -->
-     <EventDetails/>
+    <RouterView/>   
+     <!-- <EventDetails/> -->
      
 </template>
 

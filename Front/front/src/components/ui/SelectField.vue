@@ -13,23 +13,23 @@
     .select-field {
         height: 48px;
         padding: 0 14px;
-        border: solid 1px var(--input-border);
+        border: solid 1px var(--color-border);
         outline: none;
-        background-color: var(--input-bg);
-        border-radius: 6px;
+        background-color: var(--color-input-background);
+        border-radius: var(--radius-sm);
 
         max-width: 240px;
         width: 100%;
         flex-shrink: 0;
 
-        font-family: var(--main-font);
+        font-family: var(--font-main);
         font-weight: 400;
         font-size: 15px;
         color: #000;
     }
 
     .select-field:focus {
-        border-color: var(--input-focus);
+        border-color: var(--color-input-focus);
     }
 
     @media (max-width: 960px) {
@@ -38,3 +38,5 @@
         }
     }
 </style>
+
+

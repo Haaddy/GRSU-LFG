@@ -24,7 +24,7 @@
 
         width: 18px;
         height: 18px;
-        color: var(--input-placeholder);
+        color: var(--color-placeholder);
         pointer-events: none;
     }
 
@@ -32,25 +32,27 @@
         width: 100%;
         height: 48px;
         padding: 0 14px 0 40px;
-        border: solid 1px var(--input-border);
+        border: solid 1px var(--color-border);
         outline: none;
-        background-color: var(--input-bg);
-        border-radius: 6px;
+        background-color: var(--color-input-background);
+        border-radius: var(--radius-sm);
 
-        font-family: var(--main-font);
+        font-family: var(--font-main);
         font-weight: 400;
         font-size: 15px;
         color: #000;
     }
 
     .search__input::placeholder {
-        color: var(--input-placeholder);
-        font-family: var(--main-font);
+        color: var(--color-placeholder);
+        font-family: var(--font-main);
         font-weight: 400;
         font-size: 15px;
     }
 
     .search__input:focus {
-        border-color: var(--input-focus);
+        border-color: var(--color-input-focus);
     }
 </style>
+
+

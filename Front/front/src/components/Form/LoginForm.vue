@@ -81,14 +81,14 @@ const handleSubmit = () =>{
         gap: 8px;
     }
     .login-form label {
-        font-family: var(--main-font);
+        font-family: var(--font-main);
         font-weight: 500;
         font-size: 13px;
         
     }
 
     .login-form__btn{
-        background-color: var(--form-btn);
+        background-color: var(--color-action);
         border: none;
 
         width: 100%;
@@ -96,7 +96,7 @@ const handleSubmit = () =>{
         border-radius: 8px;
         color: #fff;
 
-        font-family: var(--main-font);
+        font-family: var(--font-main);
         font-weight: 500;
 
         
@@ -144,14 +144,15 @@ const handleSubmit = () =>{
     }
 
     .login-form__footer p{
-        font-family: var(--logo-font);
+        font-family: var(--font-logo);
         font-weight: 500;
         font-size: 12px;
     }
     .login-form__footer-link{
         color: blue;
-        font-family: var(--main-font);
+        font-family: var(--font-main);
         font-weight: 600;
         font-size: 12px;
     }
 </style>
+
