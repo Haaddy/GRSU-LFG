@@ -1,13 +1,19 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router';
 import type { EventItem } from '@/types/event';
 
-defineProps<{
+const props = defineProps<{
     event: EventItem;
+    detailsTo?: string;
 }>();
 </script>
 
 <template>
-    <article class="event-card">
+    <component
+        :is="props.detailsTo ? RouterLink : 'article'"
+        class="event-card"
+        :to="props.detailsTo"
+    >
         <div class="event-card__top">
             <h3 class="event-card__name">{{ event.name }}</h3>
             <span
@@ -54,7 +60,7 @@ defineProps<{
                 :class="{ 'event-card__team--required': event.teamRequired }"
             >{{ event.teamRequired ? 'Team required' : 'Individual' }}</span>
         </div>
-    </article>
+    </component>
 </template>
 
 <style scoped>
@@ -69,12 +75,19 @@ defineProps<{
         background-color: #fff;
         border: solid 1px var(--color-border);
         border-radius: var(--radius-lg);
+        color: inherit;
+        text-decoration: none;
+        transition: transform 0.3s, box-shadow 0.3s;
     }
 
     .event-card:hover {
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         transform: translateY(-3px);
-        transition: 0.3s;
+    }
+
+    .event-card:focus-visible {
+        outline: 3px solid rgba(18, 27, 104, 0.3);
+        outline-offset: 3px;
     }
 
     .event-card__top {
@@ -182,5 +195,4 @@ defineProps<{
         color: var(--color-primary);
     }
 </style>
-
 

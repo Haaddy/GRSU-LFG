@@ -8,6 +8,7 @@ defineProps<{
     captainInitial: string;
     captainName: string;
     captainColor?: 'green' | 'pink';
+    detailsTo?: string;
 }>();
 </script>
 
@@ -17,7 +18,10 @@ defineProps<{
             <div class="team-card__identity">
                 <span class="team-mark" :class="`team-mark--${color}`">{{ initials }}</span>
                 <div>
-                    <h3>{{ name }}</h3>
+                    <h3>
+                        <router-link v-if="detailsTo" :to="detailsTo">{{ name }}</router-link>
+                        <template v-else>{{ name }}</template>
+                    </h3>
                     <p>{{ description }}</p>
                 </div>
             </div>
@@ -91,6 +95,14 @@ defineProps<{
     font-size: 0.92rem;
 }
 
+.team-card h3 a {
+    color: inherit;
+}
+
+.team-card h3 a:hover {
+    color: var(--color-primary);
+}
+
 .team-card p {
     color: #8b8b8b;
     font-family: var(--font-main);
@@ -144,5 +156,4 @@ defineProps<{
     }
 }
 </style>
-
 

@@ -20,6 +20,7 @@ import TeamCard from './TeamCard.vue';
                 initials="PX"
                 color="purple"
                 name="Pixel Pioneers"
+                details-to="/team-details/pixel-pioneers"
                 description="Building playful tools for campus life"
                 capacity="3 / 5"
                 captain-initial="A"
@@ -136,5 +137,3 @@ h2 {
     }
 }
 </style>
-
-

@@ -96,7 +96,12 @@ const events: EventItem[] = [
                 <!-- Events grid -->
                  <!-- TODO compontent -->
                 <div class="explore__grid">
-                    <EventCard v-for="event in events" :key="event.id" :event="event"/>
+                    <EventCard
+                        v-for="event in events"
+                        :key="event.id"
+                        :event="event"
+                        :details-to="event.id === 1 ? '/event-details' : undefined"
+                    />
                 </div>
             </section>
         </main>
@@ -163,5 +168,4 @@ const events: EventItem[] = [
         }
     }
 </style>
-
 
