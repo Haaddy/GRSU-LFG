@@ -15,7 +15,7 @@ import EventSummaryItem from './EventSummaryItem.vue';
                 Соберите команду, создайте прототип и поборитесь за главный приз.
             </p>
             <div class="event-hero__actions">
-                <button class="button button--primary" type="button">Create team</button>
+                <router-link class="button button--primary" to="/create-team">Create team</router-link>
                 <button class="button button--secondary" type="button">View teams</button>
             </div>
         </div>
@@ -190,5 +190,4 @@ import EventSummaryItem from './EventSummaryItem.vue';
     }
 }
 </style>
-
 
